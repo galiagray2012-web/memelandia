@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galería de Memes Divertidos</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #ffe6f0; /* rosa suave */
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background: linear-gradient(90deg, #ffdd57, #ff69b4); /* amarillo a rosa */
+        text-align: center;
+        padding: 25px;
+        font-size: 2em;
+        font-weight: bold;
+        color: #000;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .upload-section {
+        background: #cce0ff; /* azul suave */
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    .upload-section input[type="text"],
+    .upload-section input[type="file"] {
+        padding: 8px;
+        width: 200px;
+        margin: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .upload-section button {
+        background: #ff69b4;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .upload-section button:hover {
+        background: #ff85c1;
+    }
+
+    .memes-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .meme-card {
+        background: #fff3f8;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        text-align: center;
+        transform: scale(0.9);
+        opacity: 0;
+        animation: appear 0.5s forwards;
+    }
+
+    .meme-card img {
+        width: 100%;
+        display: block;
+    }
+
+    .meme-caption {
+        padding: 10px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    footer {
+        background: #ffdd57;
+        text-align: center;
+        padding: 15px;
+        margin-top: 30px;
+        font-weight: bold;
+    }
+
+    @keyframes appear {
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+</head>
+<body>
+<header>Galería de Memes Divertidos</header>
+
+<main>
+    <div class="upload-section">
+        <h2>Tu Meme Diario</h2>
+        <input type="file" id="yourMemeFile" accept="image/*"><br>
+        <input type="text" id="yourMemeCaption" placeholder="Texto del meme"><br>
+        <button onclick="addYourMeme()">Subir Meme</button>
+    </div>
+
+    <div class="upload-section">
+        <h2>Comparte Tu Meme</h2>
+        <input type="file" id="visitorMemeFile" accept="image/*"><br>
+        <input type="text" id="visitorMemeCaption" placeholder="Texto del meme"><br>
+        <button onclick="addVisitorMeme()">Compartir Meme</button>
+    </div>
+
+    <div class="memes-gallery" id="memes-container"></div>
+</main>
+
+<footer>Hecho con ❤️ por Galia</footer>
+
+<script>
+function createMemeCard(imgSrc, caption) {
+    const memeCard = document.createElement('div');
+    memeCard.className = 'meme-card';
+
+    const memeImg = document.createElement('img');
+    memeImg.src = imgSrc;
+    memeImg.alt = 'Meme divertido';
+
+    const memeCaption = document.createElement('div');
+    memeCaption.className = 'meme-caption';
+    memeCaption.innerText = caption;
+
+    memeCard.appendChild(memeImg);
+    memeCard.appendChild(memeCaption);
+
+    return memeCard;
+}
+
+function readAndAddMeme(fileInputId, captionInputId) {
+    const fileInput = document.getElementById(fileInputId);
+    const captionInput = document.getElementById(captionInputId);
+
+    const file = fileInput.files[0];
+    const caption = captionInput.value;
+
+    if (!file || !caption) {
+        alert('¡Selecciona una imagen y escribe un texto!');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const memesContainer = document.getElementById('memes-container');
+        const memeCard = createMemeCard(e.target.result, caption);
+        memesContainer.prepend(memeCard);
+        fileInput.value = '';
+        captionInput.value = '';
+    }
+    reader.readAsDataURL(file);
+}
+
+function addYourMeme() {
+    readAndAddMeme('yourMemeFile', 'yourMemeCaption');
+}
+
+function addVisitorMeme() {
+    readAndAddMeme('visitorMemeFile', 'visitorMemeCaption');
+}
+</script>
+</body>
+</html>
